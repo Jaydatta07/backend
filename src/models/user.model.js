@@ -44,9 +44,9 @@ const userSchema = new Schema({
         refreshToken: {
             type: String
         }
-    },{timestamps: true})
+    },{timestamps: true}) //timestamp field shows two fields called createdAt and updatedAt with date and time format in database 
 
-userSchema.pre("save", async function (next) {//pre executes before the event and act as middleware 
+userSchema.pre("save", async function (next) {//pre executes before the event(here "save"), and act as middleware 
     if(!this.isModified("password")) return next()
     this.password = await bcrypt.hash(this.password, 10)
     next()

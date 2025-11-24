@@ -16,9 +16,10 @@ const registerUser = asyncHandler( async(req,res) => {
     //check for user creation  8️⃣
     //return res  9️⃣ 🔟
 
+
     //1️⃣
     const {fullName,username,email,password} = req.body    //get user details from frontend  
-    console.log("email: ",email);
+    // console.log("email: ",email);  //test
 
     //2️⃣
     if (    //validation that fields are not empty   
@@ -29,7 +30,7 @@ const registerUser = asyncHandler( async(req,res) => {
     }
 
     //3️⃣
-    const existedUser = User.findOne({    //checks whether email or username related user already exists in database, and because this method requires access of database thats why we use User model reference
+    const existedUser = await User.findOne({    //checks whether email or username related user already exists in database, and because this method requires access of database thats why we use User model reference
         $or: [{username},{email}]//this automatically checks whether the user of same credentials exists or not
     })
 
@@ -37,9 +38,17 @@ const registerUser = asyncHandler( async(req,res) => {
         throw new ApiError(409, "User with same email or username already exists")
     }
 
+    //
+    // console.log(req.files);   //test
+
     //4️⃣
-    const avatarLocalPath = req.files?.avatar[0]?.path;  //check the avatar file locally on local path
-    const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    const avatarLocalPath = req.files?.avatar[0]?.path;  //check the avatar file locally on local path and give that path
+    // const coverImageLocalPath = req.files?.coverImage[0]?.path;   //this line is only used when coverImage is compulsory(required: true) instead of optional
+
+    let coverImageLocalPath;   //but the coverImage is optional and thats why this code is used for coverImage
+    if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0){
+        coverImageLocalPath = req.files.coverImage[0].path;  //this gives the path of coverImage only if it is saved locally
+    }
 
     if(!avatarLocalPath){    //check that avatar file is locally saved or not
         throw new ApiError(400, "Avatar file is required")
