@@ -14,4 +14,10 @@ app.use(express.urlencoded({extended:true, limit:"16kb"}))//middleware to parse 
 app.use(express.static("public"))//serving static files like images,css files from the public directory
 app.use(cookieParser())//middleware to parse cookies from incoming requests
 
+//import routes
+import userRouter from './routes/user.routes.js'//name of the import can be different only if export is default(router - userRouter)
+
+//routes declaration
+app.use("/api/v1/users",userRouter)
+
 export { app }
