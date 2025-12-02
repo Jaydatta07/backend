@@ -1,6 +1,6 @@
 import express from "express"
 import { Router } from "express";
-import { loginUser, logoutUser, registerUser } from "../controllers/user.controller.js";
+import { loginUser, logoutUser, registerUser, refreshAccessToken } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js"
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 
@@ -23,5 +23,7 @@ router.route("/login").post(loginUser)
 
 //secured routes
 router.route("/logout").post(verifyJwt, logoutUser)//route first visits first function(verifyJwt) and then the next() keyword in that function tells route that visit second function in row(logoutUser)
+
+router.route("/refresh-token").post(refreshAccessToken)
 
 export default router
